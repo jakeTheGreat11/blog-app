@@ -1,0 +1,40 @@
+# Node.js modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Editor or IDE-specific files
+.vscode/
+.idea/
+
+# Cache and output folders
+*.cache
+build/
+dist/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Coverage directories used by testing tools
+coverage/
+
+# Debug files
+*.pid
+*.seed
+*.pid.lock
+
+# Uploaded files
+public/uploads/
