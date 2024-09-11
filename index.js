@@ -34,7 +34,7 @@ function assignPostId(req, res, next){
     next();
 }
 
-var posts;
+var posts = [];
 // var posts = [
 //     { id: 1, topic: "school",title: "First Post",publishDate: "nov 12", content: "This is the first post content." ,pic: "pic1.jpg"},
 //     { id: 2, topic: "school",title: "Second Post", publishDate: "nov 12",content: "This is the second post content." , pic: ""},
@@ -49,14 +49,16 @@ app.get("/makepost" , (req, res) => {
 });
 
 app.post("/create-post", upload.single('pic'), assignPostId, (req, res) => {
-    const {id, title, topic, publishDate, content} = req.body;
+    const {id, title, topic, content} = req.body;
     const pic = req.file ? req.file.filename : '';
-
+    const publishDate = new Date();
+    const formattedDate = publishDate.toISOString().slice(0, 10);
+    
     posts.push({
         id: id,
         topic: topic,
         title: title,
-        publishDate: publishDate,
+        publishDate: formattedDate,
         content: content,
         pic: pic
     });
@@ -74,8 +76,6 @@ app.get("/post/:id", (req, res) => {
     }
 });
 
-//<a href="/post/<%= post.id %>/edit"><button type="button" class="btn btn-outline-info">Edit</button></a>
-
 app.get("/post/:id/edit", (req, res) => {
     const postId = req.params.id;
     const post = posts.find(post => post.id === parseInt(postId))
@@ -87,19 +87,21 @@ app.get("/post/:id/edit", (req, res) => {
 app.post("/post/:id/edit", upload.single('pic'), (req, res) => {
 
     const postId = req.params.id;
-    const {title, topic, publishDate, content} = req.body;
+    const {title, topic, content} = req.body;
     const existingPost = posts.find(post => post.id === parseInt(postId))
 
     if (!existingPost) {
         return res.status(404).send("Post not found...");
     }
     const pic = req.file ? req.file.filename :  existingPost.pic;
+    const publishDate = new Date();
+    const formattedDate = publishDate.toISOString().slice(0, 10);
 
     const updatedPost = {
         id: postId,
         title: title,
         topic: topic,
-        publishDate: publishDate,
+        publishDate: formattedDate,
         content: content,
         pic:pic
     } 
@@ -122,7 +124,9 @@ app.post("/post/:id/delete" ,(req, res) => {
 
 app.get("/", (req, res) => {
     
-    res.render("home.ejs" , {posts})
+    res.render("home.ejs" , {
+        posts:posts
+    });
 });
 
 app.listen(port, () =>{
